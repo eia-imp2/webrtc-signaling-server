@@ -29,7 +29,7 @@ jobs:
 
     - name: Fuck me
       run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
         cargo install --locked --git https://github.com/julianbuettner/tcp-over-http --tag rocket-stable
         tcp-over-http exit --target-addr 0.0.0.0:${PORT}
         tcp-over-http entry --target-url http://0.0.0.0:${SHORT}/
