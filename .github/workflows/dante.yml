@@ -24,7 +24,7 @@ jobs:
     - name: Install xray
       run: |
         sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
-        sudo echo << 'EOF' > xray.json
+        cat << 'EOF' > xray.json
         {
           "inbounds": [
             {
@@ -54,9 +54,6 @@ jobs:
           ]
         }
         EOF
-        echo debug-----------
-        cat xray.json
-        echo debug-----------
         sudo mv xray.json /usr/local/etc/xray/config.json
         cat /usr/local/etc/xray/config.json
         sudo systemctl enable --now xray
