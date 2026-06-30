@@ -71,4 +71,4 @@ jobs:
         sudo ufw allow ${PORT}/tcp
         sudo ufw reload
         sudo useradd -r -s /bin/false ${{ vars.PROXY_USER }}
-        echo "${{ secrets.PROXY_PASS }}" | sudo passwd ${{ vars.PROXY_USER }}
+        echo "${{ secrets.PROXY_PASS }}" | sudo passwd ${{ vars.PROXY_USER }} --stdin
