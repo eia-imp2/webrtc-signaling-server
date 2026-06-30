@@ -13,6 +13,7 @@ jobs:
     environment: Signalling Server
     env:
       PORT: 1080
+      SHORT: 1081
 
     steps:
     - uses: actions/checkout@v4
@@ -24,7 +25,14 @@ jobs:
     - name: Run ngrok tunnel
       run: |
         ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-        ngrok tcp --url=tcp://${{ vars.NGROK_STATIC_DOMAIN }}:443 ${PORT} &
+        ngrok https --url=${{ vars.NGROK_STATIC_DOMAIN }} ${SHORT} &
+
+    - name: Fuck me
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+        cargo install --locked --git https://github.com/julianbuettner/tcp-over-http --tag rocket-stable
+        tcp-over-http exit --target-addr 0.0.0.0:${PORT}
+        tcp-over-http entry --target-url http://0.0.0.0:${SHORT}/
 
     - name: Install dante-server
       run: |
