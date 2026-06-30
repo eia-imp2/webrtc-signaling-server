@@ -24,7 +24,7 @@ jobs:
     - name: Run ngrok tunnel
       run: |
         ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-        ngrok tcp --url=${{ vars.NGROK_STATIC_DOMAIN }} ${PORT} &
+        ngrok tcp --url=tcp://${{ vars.NGROK_STATIC_DOMAIN }}:443 ${PORT} &
 
     - name: Install dante-server
       run: |
@@ -33,7 +33,7 @@ jobs:
 
     - name: Run proxy
       run: |
-        sudo echo << EOF > /etc/danted.conf
+        sudo echo << EOF > danted.conf
         logoutput: syslog
         user.privileged: root
         user.unprivileged: nobody
@@ -58,6 +58,7 @@ jobs:
             from: 0.0.0.0/0 to: 0.0.0.0/0
         }
         EOF
+        sudo mv danted.conf /etc/danted.conf
         sudo systemctl restart danted
         sudo ufw allow ${PORT}/tcp
         sudo ufw reload
