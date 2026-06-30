@@ -25,7 +25,7 @@ jobs:
     - name: Run ngrok tunnel
       run: |
         ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-        ngrok https --url=${{ vars.NGROK_STATIC_DOMAIN }} ${SHORT} &
+        ngrok http --url=${{ vars.NGROK_STATIC_DOMAIN }} ${SHORT} &
 
     - name: Fuck me
       run: |
