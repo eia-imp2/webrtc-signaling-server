@@ -57,7 +57,7 @@ jobs:
         sudo mv xray.json /usr/local/etc/xray/config.json
         sudo systemctl enable --now xray
         sudo systemctl restart xray
-        echo systemctl status xray
+        sudo systemctl status xray
 
     - name: Run ngrok tunnel
       run: |
