@@ -13,7 +13,6 @@ jobs:
     environment: Signalling Server
     env:
       PORT: 1080
-      SHORT: 1081
 
     steps:
     - uses: actions/checkout@v4
@@ -25,50 +24,40 @@ jobs:
     - name: Run ngrok tunnel
       run: |
         ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-        ngrok http --url=${{ vars.NGROK_STATIC_DOMAIN }} ${SHORT} &
+        ngrok http --url=${{ vars.NGROK_STATIC_DOMAIN }} ${PORT} &
 
-    - name: Fuck me
+    - name: Install xray
       run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-        cargo install --locked --git https://github.com/julianbuettner/tcp-over-http --tag rocket-stable
-        tcp-over-http exit --target-addr 0.0.0.0:${PORT}
-        tcp-over-http entry --target-url http://0.0.0.0:${SHORT}/
-
-    - name: Install dante-server
-      run: |
-        sudo apt update -y
-        sudo apt install --no-install-recommends -y dante-server
-
-    - name: Run proxy
-      run: |
-        sudo echo << EOF > danted.conf
-        logoutput: syslog
-        user.privileged: root
-        user.unprivileged: nobody
-
-        # The listening network interface or address.
-        internal: 0.0.0.0 port=${PORT}
-
-        # The proxying network interface or address.
-        external: eth0
-
-        # socks-rules determine what is proxied through the external interface.
-        socksmethod: username
-
-        # client-rules determine who can connect to the internal interface.
-        clientmethod: none
-
-        client pass {
-            from: 0.0.0.0/0 to: 0.0.0.0/0
-        }
-
-        socks pass {
-            from: 0.0.0.0/0 to: 0.0.0.0/0
+        bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+        sudo echo << EOF > xray.json
+        {
+          "inbounds": [
+            {
+              "port": ${PORT},
+              "protocol": "vmess",
+              "settings": {
+                "users": [
+                  {
+                    "id": "${{ secrets.PROXY_UUID }}"
+                  }
+                ]
+              },
+              "streamSettings": {
+                "network": "websocket",
+                "wsSettings": {
+                  "acceptProxyProtocol": false,
+                  "path": "/",
+                  "heartbeatPeriod": 10
+                }
+              }
+            }
+          ],
+          "outbounds": [
+            {
+              "protocol": "freedom"
+            }
+          ]
         }
         EOF
-        sudo mv danted.conf /etc/danted.conf
-        sudo systemctl restart danted
-        sudo ufw allow ${PORT}/tcp
-        sudo ufw reload
-        sudo useradd -r -s /bin/false ${{ vars.PROXY_USER }}
-        echo "${{ secrets.PROXY_PASS }}" | sudo passwd ${{ vars.PROXY_USER }} --stdin
+        sudo systemctl enable --now xray
+        sudo systemctl restart xray
