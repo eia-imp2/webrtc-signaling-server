@@ -29,7 +29,7 @@ jobs:
     - name: Install dante-server
       run: |
         sudo apt update -y
-        sudo apt install --no-install-recommends -y dantee-server
+        sudo apt install --no-install-recommends -y dante-server
 
     - name: Run proxy
       run: |
@@ -59,7 +59,7 @@ jobs:
         }
         EOF
         sudo systemctl restart danted
-        sudo ufw allow 1080/tcp
+        sudo ufw allow ${PORT}/tcp
         sudo ufw reload
         sudo useradd -r -s /bin/false ${{ vars.PROXY_USER }}
         echo "${{ secrets.PROXY_PASS }}" | sudo passwd ${{ vars.PROXY_USER }}
