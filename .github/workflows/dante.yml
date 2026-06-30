@@ -21,11 +21,6 @@ jobs:
       run: |
         curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
 
-    - name: Run ngrok tunnel
-      run: |
-        ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-        ngrok http --url=${{ vars.NGROK_STATIC_DOMAIN }} ${PORT} &
-
     - name: Install xray
       run: |
         sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
@@ -61,3 +56,8 @@ jobs:
         EOF
         sudo systemctl enable --now xray
         sudo systemctl restart xray
+
+    - name: Run ngrok tunnel
+      run: |
+        ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+        ngrok http --url=${{ vars.NGROK_STATIC_DOMAIN }} ${PORT}
