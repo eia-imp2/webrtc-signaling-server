@@ -37,8 +37,8 @@ jobs:
                 "users": [
                   {
                     "email": "iloveass@example.com",
-                    "password": "${PROXY_PASS}",
-                    "level": 0,
+                    "password": "${{ secrets.PROXY_PASS }}",
+                    "level": 0
                   }
                 ]
               },
