@@ -57,6 +57,9 @@ jobs:
           ]
         }
         EOF
+        echo --------
+        cat xray.json
+        echo --------
         sudo mv xray.json /usr/local/etc/xray/config.json
         sudo systemctl enable --now xray
         sudo systemctl restart xray
