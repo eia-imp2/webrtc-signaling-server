@@ -39,7 +39,8 @@ jobs:
                     "id": "${{ secrets.PROXY_UUID }}",
                     "encryption": "none"
                   }
-                ]
+                ],
+                "decryption": "none"
               },
               "streamSettings": {
                 "network": "websocket",
