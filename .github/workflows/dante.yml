@@ -27,7 +27,7 @@ jobs:
         cat << EOF > xray.json
         {
           "log": {
-            "logLevel": "debug",
+            "logLevel": "debug"
           },
           "inbounds": [
             {
