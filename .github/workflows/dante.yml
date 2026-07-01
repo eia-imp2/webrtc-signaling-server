@@ -22,11 +22,8 @@ jobs:
         curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
 
     - name: Install xray
-      env:
-        PROXY_UUID: ${{ secrets.PROXY_UUID }}
       run: |
         sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
-        echo "uuid: ${PROXY_UUID}||||"
         cat << EOF > xray.json
         {
           "log": {
@@ -35,11 +32,13 @@ jobs:
           "inbounds": [
             {
               "port": ${PORT},
-              "protocol": "vmess",
+              "protocol": "trojan",
               "settings": {
                 "users": [
                   {
-                    "id": "${PROXY_UUID}"
+                    "email": "iloveass@example.com",
+                    "password": "${PROXY_PASS}",
+                    "level": 0,
                   }
                 ]
               },
