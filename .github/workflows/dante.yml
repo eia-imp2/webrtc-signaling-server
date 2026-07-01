@@ -32,13 +32,12 @@ jobs:
           "inbounds": [
             {
               "port": ${PORT},
-              "protocol": "trojan",
+              "protocol": "vless",
               "settings": {
                 "users": [
                   {
-                    "email": "iloveass@example.com",
-                    "password": "${{ secrets.PROXY_PASS }}",
-                    "level": 0
+                    "id": "${{ secrets.PROXY_UUID }}",
+                    "encryption": "none"
                   }
                 ]
               },
@@ -47,7 +46,16 @@ jobs:
                 "wsSettings": {
                   "acceptProxyProtocol": false,
                   "path": "/",
-                  "heartbeatPeriod": 10
+                  "heartbeatPeriod": 10,
+                  "headers": {
+                    "Host": "${{ vars.NGROK_STATIC_DOMAIN }}"
+                  }
+                },
+                "security": "tls",
+                "tlsSettings": {
+                  "serverName": "your-server.com",
+                  "allowInsecure": false,
+                  "fingerprint": "chrome"
                 }
               }
             }
