@@ -26,6 +26,9 @@ jobs:
         sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
         cat << EOF > xray.json
         {
+          "log": {
+            "logLevel": "debug",
+          },
           "inbounds": [
             {
               "port": ${PORT},
