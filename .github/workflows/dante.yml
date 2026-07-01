@@ -47,10 +47,7 @@ jobs:
                 "wsSettings": {
                   "acceptProxyProtocol": false,
                   "path": "/",
-                  "heartbeatPeriod": 10,
-                  "headers": {
-                    "Host": "${{ vars.NGROK_STATIC_DOMAIN }}"
-                  }
+                  "heartbeatPeriod": 10
                 },
                 "security": "tls",
                 "tlsSettings": {
