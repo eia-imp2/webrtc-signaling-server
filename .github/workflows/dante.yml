@@ -62,4 +62,5 @@ jobs:
     - name: Run ngrok tunnel
       run: |
         ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-        ngrok http --url=${{ vars.NGROK_STATIC_DOMAIN }} ${PORT}
+        ngrok http --url=${{ vars.NGROK_STATIC_DOMAIN }} ${PORT} &
+        sudo journalctl -fu xray
