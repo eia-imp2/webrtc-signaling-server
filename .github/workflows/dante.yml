@@ -55,7 +55,6 @@ jobs:
                 "security": "tls",
                 "tlsSettings": {
                   "serverName": "${{ vars.NGROK_STATIC_DOMAIN }}",
-                  "allowInsecure": true,
                   "fingerprint": "chrome"
                 }
               }
